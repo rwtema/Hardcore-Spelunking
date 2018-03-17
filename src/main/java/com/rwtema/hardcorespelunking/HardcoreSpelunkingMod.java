@@ -1,4 +1,4 @@
-package com.rwtema.stripminingprevention;
+package com.rwtema.hardcorespelunking;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -31,17 +31,17 @@ public class HardcoreSpelunkingMod {
 	static final String MODID = "hardcorespelunking";
 	static final String NAME = "Hardcore Spelunking";
 	static final String VERSION = "1.0";
-	private static final String BLOCK_REPLACEMENTS_RULES = "blockentries";
+	private static final String BLOCK_REPLACEMENTS_RULES = "block_replacement_rules";
 	private static final Pattern PATTERN = Pattern.compile("[^:]+:[^:]+:[0-9]+");
 	private static final String DIMENSIONS_WHITELIST_BLACKLIST = "dimensions:whitelist/blacklist";
 	private static final String DIMENSIONS = "dimensions";
 	private static final String RESULT = "result";
 	private static final String DISTANCE = "distance";
-	private static final String TARGETBLOCKS = "targetblocks";
-	private static final String TARGETOREDICTIONARY = "targetoredictionary";
+	private static final String TARGETBLOCKS = "target_blocks";
+	private static final String TARGETOREDICTIONARY = "target_oredictionary";
 	private static final String PRIORITY = "priority";
 	private static final String OPTIONAL = "optional";
-	private static final String SETTINGS_CATEGORY = "worldgenmultipliers";
+	private static final String SETTINGS_CATEGORY = "worldgen_multipliers";
 	private static Logger logger;
 	private static Configuration config;
 
@@ -67,16 +67,16 @@ public class HardcoreSpelunkingMod {
 
 	@EventHandler
 	public void postinit(FMLPostInitializationEvent event) {
-		if (config.getCategoryNames().contains(BLOCK_REPLACEMENTS_RULES)) {
+		if (!config.getCategoryNames().contains(BLOCK_REPLACEMENTS_RULES)) {
 			generateDefaultConfig();
 		}
-
 
 		TreeMap<HardcoreSpelunkingWorldGenerator.Meta, HashMap<IBlockState, IBlockState>> stateRanges = new TreeMap<>(
 				Comparator.<HardcoreSpelunkingWorldGenerator.Meta>comparingInt(m -> m.priority)
 						.thenComparingInt(m -> m.distance)
 		);
 
+		config.getCategory(BLOCK_REPLACEMENTS_RULES).setComment("Block replacement rules. Add a new section to add new rules.");
 		for (String s : ((Iterable<String>) config.getCategory(BLOCK_REPLACEMENTS_RULES).getChildren().stream().map(ConfigCategory::getName)::iterator)) {
 			String category = BLOCK_REPLACEMENTS_RULES + "." + s;
 			String[] blockTargets = config.get(category, TARGETBLOCKS, new String[]{}, "Target Blocks/Meta", false, -1, PATTERN).getStringList();
@@ -150,8 +150,6 @@ public class HardcoreSpelunkingMod {
 	}
 
 	private void generateDefaultConfig() {
-		config.getCategory(BLOCK_REPLACEMENTS_RULES).setComment("Block replacement rules. Add a new section to add new rules.");
-
 		{
 			String category = BLOCK_REPLACEMENTS_RULES + ".default_overworld";
 			config.getStringList(TARGETBLOCKS, category, new String[]{

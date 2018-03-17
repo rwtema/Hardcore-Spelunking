@@ -1,4 +1,4 @@
-package com.rwtema.stripminingprevention;
+package com.rwtema.hardcorespelunking;
 
 import com.google.common.collect.Lists;
 import gnu.trove.set.hash.TIntHashSet;
@@ -194,11 +194,11 @@ public class HardcoreSpelunkingWorldGenerator implements IWorldGenerator {
 
 			Meta meta = (Meta) o;
 
-			if (priority != meta.priority) return false;
-			if (distance != meta.distance) return false;
+			return priority == meta.priority &&
+					distance == meta.distance &&
+					Arrays.equals(dimensions, meta.dimensions) &&
+					blacklist.equals(meta.blacklist);
 
-			if (!Arrays.equals(dimensions, meta.dimensions)) return false;
-			return blacklist.equals(meta.blacklist);
 		}
 
 		@Override
@@ -210,7 +210,7 @@ public class HardcoreSpelunkingWorldGenerator implements IWorldGenerator {
 			return result;
 		}
 
-		public boolean matches(World world) {
+		boolean matches(World world) {
 			if (dimNames.contains(world.provider.getDimensionType().getName())) {
 				return whitelist;
 			}

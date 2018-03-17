@@ -1,4 +1,4 @@
-package com.rwtema.stripminingprevention;
+package com.rwtema.hardcorespelunking;
 
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
