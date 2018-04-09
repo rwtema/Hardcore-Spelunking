@@ -30,7 +30,7 @@ public class HardcoreSpelunkingMapGenMultiplier extends MapGenBase {
 	public static void overwriteGen(InitMapGenEvent event) {
 		@Nullable
 		Integer integer = GEN_MULTIPLIER_MAP.get(event.getType());
-		if (integer != null) {
+		if (integer != null && integer != 1 && integer >= 0) {
 			MapGenBase newGen = event.getNewGen();
 			HardcoreSpelunkingMapGenMultiplier hardcoreSpelunkingMapGenMultiplier = new HardcoreSpelunkingMapGenMultiplier(newGen, integer);
 			event.setNewGen(hardcoreSpelunkingMapGenMultiplier);
